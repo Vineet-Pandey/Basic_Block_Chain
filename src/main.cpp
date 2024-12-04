@@ -2,6 +2,7 @@
 // Created by vineet on 12/4/24.
 //
 
+#include <iomanip>
 #include <iostream>
 #include <map>
 #include <sstream>
@@ -49,6 +50,30 @@ std::string serialize(const std::map<T,K> &data) {
       ss<<serialize(it->second);
    }
    return ss.str();
+}
+
+
+std::string hashWithSodium(const std::string &data) {
+
+   size_t HASH_SIZE = crypto_generichash_BYTES;
+   unsigned char hash[HASH_SIZE];
+
+   //hashing unkeyed data
+   if (crypto_generichash(hash,
+      HASH_SIZE,
+      reinterpret_cast<const unsigned char *>(data.c_str()), data.size(),nullptr,0)!=0) {
+      throw std::runtime_error("Failed to hash data");
+   }
+
+   //convert binary to hex
+   std::ostringstream oss;
+   for (size_t i = 0; i < HASH_SIZE; ++i) {
+      oss << std::hex << std::setw(2) << std::setfill('0') << (int)hash[i];
+   }
+   return oss.str();
+
+
+
 }
 
 int main() {
