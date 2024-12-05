@@ -76,7 +76,17 @@ std::string hashWithSodium(const std::string &data) {
 
 }
 
-int main() {
+std::map<std::string, int> makeTransaction(int maxValue=3) {
+   int max=1;
+   int min =0;
+   int sign = (min+randombytes_uniform(max-min+1))*2-1;
+   int amount = (1+randombytes_uniform(maxValue));
+   int alicePays = sign*amount;
+   int bobPays = -1*alicePays;
+
+   return {{"Alice",alicePays},{"Bob",bobPays}};
+
+}int main() {
    if (sodium_init() < 0) {
       printf("Failed to initialize libsodium.\n");
    }
