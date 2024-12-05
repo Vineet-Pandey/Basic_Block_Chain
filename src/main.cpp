@@ -86,7 +86,43 @@ std::map<std::string, int> makeTransaction(int maxValue=3) {
 
    return {{"Alice",alicePays},{"Bob",bobPays}};
 
-}int main() {
+}
+
+std::map<std::string,int> updateState(std::map<std::string,int> state,std::map<std::string,int> txn) {
+   for (auto it = txn.begin(); it != txn.end(); it++) {
+      state[it->first] += it->second;
+   }
+
+   return state;
+}
+
+
+bool isValidTransaction(const std::map<std::string,int> &transaction, std::map<std::string,int> state) {
+   //since we are conserving the money here i.e., money is neither created nor destroyed, if the sum is not 0 then its an invalid transaction
+   int sum=0;
+   for (auto it = transaction.begin(); it != transaction.end(); it++) {
+      sum+=it->second;
+   }
+   if (sum!=0) {
+      return false;
+   }
+   int account_balance;
+   for (auto &it:transaction) {
+      if (state.find(it.first)!= state.end()) {
+         account_balance = state.at(it.first);
+      } else {
+         account_balance = 0;
+      }
+      if (account_balance+it.second <0) {
+         return false;
+      }
+   }
+
+   return true;
+
+}
+
+int main() {
    if (sodium_init() < 0) {
       printf("Failed to initialize libsodium.\n");
    }
