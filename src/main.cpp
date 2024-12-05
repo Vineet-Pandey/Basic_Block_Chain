@@ -126,6 +126,18 @@ int main() {
    if (sodium_init() < 0) {
       printf("Failed to initialize libsodium.\n");
    }
+   std::map<std::string, int> data = {{"age", 25}, {"height", 175}};
+   std::string s1= serialize(data);
+   std::cout << "Hash: " << hashWithSodium(s1) << std::endl;
+   int num_transactions=30;
+   std::vector<std::map<std::string,int>> transactions_buffer;
+ for (size_t i=0; i<num_transactions; i++) {
+   transactions_buffer.push_back(makeTransaction());
+ }
+
+   std::map<std::string,int> state = {{"Alice",5}, {"Bob",5}};
+   std::cout<<"Is it a valid transaction: "<<isValidTransaction({{"Alice",-3}, {"Bob",3}}, state)<<std::endl;
+
 
 
    return 0;
