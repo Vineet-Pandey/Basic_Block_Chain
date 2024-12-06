@@ -20,7 +20,7 @@ int main() {
     }
 
     // Example map data to serialize
-    std::map<std::string, int> data = {{"age", 25}, {"height", 175}};
+    IronBlock::UserBalanceMap data = {{"age", 25}, {"height", 175}};
     std::string s1 = serialize(data);
     std::cout << "Serialized Data: " << s1 << std::endl;
 
@@ -32,13 +32,13 @@ int main() {
 
     // Generating multiple transactions
     int num_transactions = 30;
-    std::vector<std::map<std::string, int>> transactions_buffer;
+    std::vector<IronBlock::UserBalanceMap> transactions_buffer;
     for (size_t i = 0; i < num_transactions; i++) {
         transactions_buffer.push_back(makeTransaction());
     }
 
     // Example initial state and transaction validation
-    std::map<std::string, int> initial_state = {{"Alice", 50}, {"Bob", 50}};
+    IronBlock::UserBalanceMap initial_state = {{"Alice", 50}, {"Bob", 50}};
     bool valid = isValidTransaction({{"Alice", -3}, {"Bob", 3}}, initial_state);
     std::cout << "Is it a valid transaction: " << (valid ? "Yes" : "No") << std::endl;
 

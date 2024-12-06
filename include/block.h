@@ -21,7 +21,7 @@ public:
       : index(index), data(data), previous_block_hash(previous_block_hash) {
     timestamp = std::time(nullptr);
   }
-  
+
   std::string hashWithSodium(const std::string &data) {
     size_t HASH_SIZE = crypto_generichash_BYTES;
     unsigned char hash[HASH_SIZE];
