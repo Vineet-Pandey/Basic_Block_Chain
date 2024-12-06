@@ -41,9 +41,7 @@ public:
     return oss.str();
   }
 
-
-
-
+  std::string returnBlockHash() { return hashWithSodium(data); }
 };
 } // namespace IronBlock
 
