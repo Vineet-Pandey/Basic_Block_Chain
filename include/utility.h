@@ -41,6 +41,7 @@ std::string serialize(const std::map<T, K> &data) {
     ss << serialize(it->first);
     ss << ":";
     ss << serialize(it->second);
+    ss<<" ";
   }
   return ss.str();
 }
