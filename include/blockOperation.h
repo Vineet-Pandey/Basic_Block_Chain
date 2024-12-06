@@ -1,6 +1,10 @@
-//
-// Created by vineet on 12/6/24.
-//
+/*
+ * @file blockOperation.h
+ * @brief Contains the implementation of block operations for user transactions
+ * and state updates.
+ * @author vineet
+ * @date 12/6/24
+ */
 
 #ifndef BLOCKOPERATION_H
 #define BLOCKOPERATION_H
@@ -8,9 +12,20 @@
 #include <map>
 
 namespace IronBlock {
+/*
+ * @typedef UserBalanceMap
+ * @brief A map to store user balances, where the key is the user's name and the
+ * value is their balance.
+ */
 typedef std::map<std::string, int> UserBalanceMap;
 
 namespace BlockOperation {
+/*
+ * @brief Creates a transaction between two users, Alice and Bob.
+ * @param maxValue The maximum value of the transaction. Default is 3.
+ * @return A UserBalanceMap representing the transaction, with Alice and Bob's
+ * updated balances.
+ */
 UserBalanceMap makeTransaction(int maxValue = 3) {
   int max = 1;
   int min = 0;
@@ -21,7 +36,12 @@ UserBalanceMap makeTransaction(int maxValue = 3) {
 
   return {{"Alice", alicePays}, {"Bob", bobPays}};
 }
-
+/*
+ * @brief Updates the state of user balances based on a given transaction.
+ * @param state The current state of user balances.
+ * @param txn The transaction to be applied to the state.
+ * @return A UserBalanceMap representing the updated state.
+ */
 UserBalanceMap updateState(UserBalanceMap state, UserBalanceMap txn) {
   for (auto it = txn.begin(); it != txn.end(); it++) {
     state[it->first] += it->second;
@@ -29,7 +49,12 @@ UserBalanceMap updateState(UserBalanceMap state, UserBalanceMap txn) {
 
   return state;
 }
-
+/*
+ * @brief Validates if a given transaction is valid based on the current state.
+ * @param transaction The transaction to be validated.
+ * @param state The current state of user balances.
+ * @return True if the transaction is valid, otherwise false.
+ */
 bool isValidTransaction(const UserBalanceMap &transaction,
                         UserBalanceMap state) {
   // since we are conserving the money here i.e., money is neither created nor
