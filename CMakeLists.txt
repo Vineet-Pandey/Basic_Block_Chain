@@ -3,7 +3,9 @@ project(basic_block_chain)
 set(CMAKE_CXX_STANDARD 17)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(SODIUM REQUIRED libsodium)
-include_directories(${SODIUM_INCLUDE_DIRS})
+
+
+include_directories(${SODIUM_INCLUDE_DIRS} include)
 
 # Set the source file for the main executable
 set(SOURCE_FILE src/main.cpp)
