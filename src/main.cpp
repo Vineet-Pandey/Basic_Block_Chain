@@ -1,16 +1,12 @@
 #include <iomanip>
 #include <iostream>
 #include <map>
-#include <sstream>
 #include <vector>
 #include <sodium.h>
 #include "utility.h"
 #include "block.h"
 #include "blockOperation.h"
-
-
-using namespace IronBlock::Utility;       // For using serialize function
-using namespace IronBlock::BlockOperation; // For using makeTransaction and other block operations
+#include "blockchain.h"
 
 int main() {
     // Initialize Sodium
@@ -19,28 +15,29 @@ int main() {
         return 1;
     }
 
-    // Example map data to serialize
-    IronBlock::UserBalanceMap data = {{"age", 25}, {"height", 175}};
-    std::string s1 = serialize(data);
-    std::cout << "Serialized Data: " << s1 << std::endl;
+    IronBlock::Blockchain blockchain;
 
-    // Creating a Block instance and hashing data using the hashWithSodium function
-    std::string prev_hash_init ="0";
-    IronBlock::Block block(0, s1, prev_hash_init);
-    std::string block_hash = block.hashWithSodium(s1);  // Make hashWithSodium public to use it here
-    std::cout << "Block Hash: " << block_hash << std::endl;
+    int num_coins=20;
+    IronBlock::UserBalanceMap initial_state = {{"Alice", num_coins}, {"Bob", num_coins}};
+    std::string data = IronBlock::Utility::serialize(initial_state);
+    blockchain.addBlock(data);
 
     // Generating multiple transactions
     int num_transactions = 30;
     std::vector<IronBlock::UserBalanceMap> transactions_buffer;
-    for (size_t i = 0; i < num_transactions; i++) {
-        transactions_buffer.push_back(makeTransaction());
+    IronBlock::UserBalanceMap state=initial_state;
+    for (size_t i = 0; i < num_transactions-1; i++) {
+        transactions_buffer.push_back(IronBlock::BlockOperation::makeTransaction());
+        state = IronBlock::BlockOperation::updateState(state, transactions_buffer[i]);
+        if (IronBlock::BlockOperation::isValidTransaction(transactions_buffer[i], state )) {
+            std::string data = IronBlock::Utility::serialize(transactions_buffer[i]);
+            blockchain.addBlock(data);
+        }
+        else {std::cout<<"Transaction update failed"<<std::endl;}
     }
 
-    // Example initial state and transaction validation
-    IronBlock::UserBalanceMap initial_state = {{"Alice", 50}, {"Bob", 50}};
-    bool valid = isValidTransaction({{"Alice", -3}, {"Bob", 3}}, initial_state);
-    std::cout << "Is it a valid transaction: " << (valid ? "Yes" : "No") << std::endl;
+    blockchain.displayBlockChain();
+
 
     return 0;
 }
